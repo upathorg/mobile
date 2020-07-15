@@ -4,12 +4,7 @@
     "slug": "upathmob",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "facebookScheme": "fb591468395094095",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
