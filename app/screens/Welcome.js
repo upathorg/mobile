@@ -1,4 +1,5 @@
 import React from "react";
+import * as Google from "expo-google-app-auth";
 import {
   ImageBackground,
   StyleSheet,
@@ -11,28 +12,48 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function Welcome({ navigation }) {
   console.log("welcome");
+  async function signInWithGoogleAsync() {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId:
+          "881368790168-nbsmfbrfrtd19r9l3jk685uh3iava26d.apps.googleusercontent.com",
+        iosClientId:
+          "881368790168-k0rslls3il3h8uimevr0717u9rpiu43b.apps.googleusercontent.com",
+        scopes: ["profile", "email"],
+      });
+
+      if (result.type === "success") {
+        navigation.navigate("DashboardScreen");
+        return result.accessToken;
+      } else {
+        return { cancelled: true };
+      }
+    } catch (e) {
+      return { error: true };
+    }
+  }
   return (
     <ImageBackground
       source={require("../assets/images/upathArt.png")}
       style={styles.imageBack}
     >
-      <View style={styles.logoContainer}>
+      {/* <View style={styles.logoContainer}>
         <Image
           source={require("../assets/logo/upathLogo.png")}
           style={styles.logo}
         ></Image>
-      </View>
+      </View> */}
 
       <View style={styles.div}>
         <TextInput
           style={styles.inpt}
           placeholder="  Email"
-          placeholderTextColor="#fff5ee"
+          placeholderTextColor="#000000"
         />
         <TextInput
           style={styles.inpt}
           placeholder="  Password"
-          placeholderTextColor="#fff5ee"
+          placeholderTextColor="#000000"
           secureTextEntry={true}
         />
 
@@ -47,6 +68,17 @@ export default function Welcome({ navigation }) {
             LOGIN
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btnLogin}
+          onPress={signInWithGoogleAsync}
+        >
+          <Text
+            style={styles.btnTxt}
+            // onPress={() => navigation.navigate("Login")}
+          >
+            Google Sign in
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.btnRegister}>
           <Text style={styles.btnTxt2}>Already have an account?</Text>
         </TouchableOpacity>
@@ -58,10 +90,10 @@ export default function Welcome({ navigation }) {
 const styles = StyleSheet.create({
   imageBack: {
     flex: 1,
-    width: 100,
-    height: 100,
     justifyContent: "flex-end",
     alignItems: "center",
+    backgroundColor: "#00000000",
+    opacity: 0.5,
   },
   div: {
     width: "70%",
@@ -83,13 +115,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     color: "#fff5ee",
   },
-  btnTxt2: { alignSelf: "center", color: "gray" },
+  btnTxt2: { alignSelf: "center", color: "#000000" },
   inpt: {
     width: "100%",
     height: 40,
     borderBottomWidth: 1,
-    borderBottomColor: "#fff5ee",
-    color: "#fff5ee",
+    borderBottomColor: "#000000",
     borderRadius: 5,
     margin: 3,
   },
@@ -104,6 +135,5 @@ const styles = StyleSheet.create({
   },
   btnRegister: {
     margin: 5,
-    color: "#fff5ee",
   },
 });
