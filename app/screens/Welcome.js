@@ -8,8 +8,34 @@ import {
   TextInput,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as Facebook from 'expo-facebook';
+
 
 export default function Welcome({ navigation }) {
+  const id = "591468395094095";
+  facebookLogIn = async () => {
+    try {
+      await Facebook.initializeAsync(id);
+      const {
+        type,
+        token,
+        expires,
+        permissions,
+        declinedPermissions,
+      } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ['public_profile'],
+      });
+      if (type === 'success') {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,picture.height(500)`);
+        alert('Logged in!', `Hi ${(await response.json()).name}!`);
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  }
   console.log("welcome");
   return (
     <ImageBackground
@@ -42,10 +68,16 @@ export default function Welcome({ navigation }) {
         >
           <Text
             style={styles.btnTxt}
-            // onPress={() => navigation.navigate("Login")}
+          // onPress={() => navigation.navigate("Login")}
           >
             LOGIN
           </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btnLogin}
+          onPress={this.facebookLogIn}
+        >
+          <Text style={styles.btnTxt}>Login with Facebook</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btnRegister}>
           <Text style={styles.btnTxt2}>Already have an account?</Text>
