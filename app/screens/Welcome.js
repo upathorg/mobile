@@ -114,7 +114,6 @@ export default function Welcome({ navigation }) {
         >
           <Text style={styles.btnTxt}>Login with Facebook</Text>
         </FontAwesome.Button>
-
         <TouchableOpacity style={styles.btnRegister}>
           <Text style={styles.btnTxt2}>Already have an account?</Text>
         </TouchableOpacity>
