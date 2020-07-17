@@ -1,5 +1,7 @@
 import React from "react";
+import { FontAwesome } from "@expo/vector-icons";
 import * as Google from "expo-google-app-auth";
+import * as Facebook from "expo-facebook";
 import {
   ImageBackground,
   StyleSheet,
@@ -11,6 +13,33 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function Welcome({ navigation }) {
+  const id = "591468395094095";
+  facebookLogIn = async () => {
+    try {
+      await Facebook.initializeAsync(id);
+      const {
+        type,
+        token,
+        expires,
+        permissions,
+        declinedPermissions,
+      } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile"],
+      });
+      if (type === "success") {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,picture.height(500)`
+        );
+        alert("Logged in!", `Hi ${(await response.json()).name}!`);
+        navigation.navigate("DashboardScreen");
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  };
   console.log("welcome");
   async function signInWithGoogleAsync() {
     try {
@@ -33,16 +62,21 @@ export default function Welcome({ navigation }) {
     }
   }
   return (
-    <ImageBackground
-      source={require("../assets/images/upathArt.png")}
-      style={styles.imageBack}
-    >
-      {/* <View style={styles.logoContainer}>
+    <View style={styles.imageBack}>
+      <Image
+        source={require("../assets/images/upathArt.png")}
+        style={styles.img}
+      ></Image>
+      {/* <ImageBackground
+        source={require("../assets/images/upathArt.png")}
+        style={styles.imageBack}
+      > */}
+      <View style={styles.logoContainer}>
         <Image
           source={require("../assets/logo/upathLogo.png")}
           style={styles.logo}
         ></Image>
-      </View> */}
+      </View>
 
       <View style={styles.div}>
         <TextInput
@@ -59,31 +93,33 @@ export default function Welcome({ navigation }) {
 
         <TouchableOpacity
           style={styles.btnLogin}
-          onPress={() => navigation.navigate("DashboardScreen")}
+          // onPress={() => navigation.navigate("DashboardScreen")}
         >
-          <Text
-            style={styles.btnTxt}
-            // onPress={() => navigation.navigate("Login")}
-          >
-            LOGIN
-          </Text>
+          <Text style={styles.btnTxt}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btnLogin}
+        <FontAwesome.Button
+          name="google"
+          style={styles.btnFc}
+          backgroundColor={"#f5f5f5"}
           onPress={signInWithGoogleAsync}
         >
-          <Text
-            style={styles.btnTxt}
-            // onPress={() => navigation.navigate("Login")}
-          >
-            Google Sign in
-          </Text>
-        </TouchableOpacity>
+          <Text style={styles.btnTxt}>Login with Google</Text>
+        </FontAwesome.Button>
+
+        <FontAwesome.Button
+          name="facebook"
+          style={styles.btnGoo}
+          backgroundColor={"#ffffff"}
+          onPress={facebookLogIn}
+        >
+          <Text style={styles.btnTxt}>Login with Facebook</Text>
+        </FontAwesome.Button>
+
         <TouchableOpacity style={styles.btnRegister}>
           <Text style={styles.btnTxt2}>Already have an account?</Text>
         </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </View>
   );
 }
 
@@ -93,20 +129,26 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     backgroundColor: "#00000000",
-    opacity: 0.5,
+  },
+  img: {
+    //flex: 1,
+    width: 260,
+    height: 350,
+    top: -200,
+    right: 10,
   },
   div: {
     width: "70%",
-    top: -35,
+    top: -45,
   },
   logoContainer: {
     position: "absolute",
-    top: 100,
+    top: 330,
     alignItems: "center",
   },
   logo: {
-    width: 200,
-    height: 200,
+    width: 115,
+    height: 115,
   },
   txt: {
     top: 20,
@@ -126,12 +168,28 @@ const styles = StyleSheet.create({
   },
   btnLogin: {
     width: "100%",
-    height: 50,
-    backgroundColor: "#b9a2a2",
+    height: 45,
+    backgroundColor: "#9370db",
     borderRadius: 5,
     padding: 15,
     margin: 3,
-    marginTop: 16,
+    marginTop: 20,
+  },
+  btnFc: {
+    borderRadius: 5,
+    padding: 13,
+    justifyContent: "center",
+    height: 45,
+    backgroundColor: "#3b5998",
+    margin: 3,
+  },
+  btnGoo: {
+    borderRadius: 5,
+    padding: 13,
+    justifyContent: "center",
+    height: 45,
+    backgroundColor: "#c94131",
+    margin: 3,
   },
   btnRegister: {
     margin: 5,
