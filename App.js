@@ -1,21 +1,19 @@
-//import { StatusBar } from 'expo-status-bar';
 import React from "react";
-import Register from "./app/screens/Register";
-import Welcome from "./app/screens/Welcome";
-import DashboardScreen from "./app/screens/DashboardScreen";
+import DrawerNavigator from "./app/navigation/DrawerNavigator";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { Header } from "react-native-elements";
 
-const { Navigator, Screen } = createStackNavigator();
-
-export default function App() {
+const App = () => {
   return (
     <NavigationContainer>
-      <Navigator>
-        <Screen name="Welcome" component={Welcome} />
-        <Screen name="Register" component={Register} />
-        <Screen name="DashboardScreen" component={DashboardScreen} />
-      </Navigator>
+      <Header
+        leftComponent={{ icon: "menu", color: "#fff" }}
+        centerComponent={{ text: "MY TITLE", style: { color: "#fff" } }}
+        /* rightComponent={{ icon: "home", color: "#fff" }} */
+      />
+      <DrawerNavigator />
     </NavigationContainer>
   );
-}
+};
+
+export default App;
